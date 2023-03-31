@@ -59,3 +59,12 @@ Contributors
 * Mark Galloway
 * Abram Hindle
 * Cole Mackenzie
+* Richmond Naviza
+
+Other sources. I talked to:
+* my group-project team, 
+* students on the Discord server, 
+* and glanced through the discussion forums to see if other students were getting the same issues I was getting
+* professor's github example of Websockets. A lot of the implementations of reading/sending to websockets are from the github example.
+--> https://github.com/abramhindle/WebSocketsExamples
+* I also copy-pasted code from my own Assignment 4 to fill in the simple requests (POST/PUT/GET) for the world

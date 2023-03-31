@@ -22,9 +22,13 @@
     "/>
     <script src="json2.js"></script>
   </head> 
-  <body bgcolor="white" height="100%" width="100%"> 
+  <body bgcolor="blue" height="100%" width="100%"> 
     <div id="debug"></div>
+    <!-- // https://www.w3schools.com/css/css3_gradients.asp -->
+    <h1 style="color:white;text-align:center;">Richmond Naviza's Crazy Websocket Extravaganza</h1>
+    <!-- <button type="button" onclick="myFunction()">Console.log the world</button>  -->
     <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
+    
 
     <script>
       // Fix me
@@ -121,14 +125,23 @@ function getPosition(e) {
 	}
 }
 
+function updateEntity(entity, data){
+    world[entity] = data;
+    drawNextFrame(); // (but should we?)
+}
+
 function addEntity(entity, data) {
+    // console.log(entity, data);
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
+    let toSend = {}
+    toSend[entity] = data;
+    socket.send(JSON.stringify(toSend));
 }
 var counter = 0;
 function addEntityWithoutName(data) {
-    var name = "X"+(counter++)%100;
+    var name = "X"+(counter++)%10000;
     addEntity(name,data);
 }
 
@@ -253,15 +266,33 @@ function wsSetup() {
     var url = "ws://"+host+"/subscribe";   
     socket = new WebSocket(url);
     socket.onopen = function() {
-        //XXX: TODO What are you going to do here?
+        //XXX: TODO What are you going to do here? Nothing?
+        debug("WebSocket Opened");
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
     };
     socket.onmessage = function(msg) {  
         try {
-            debug("WebSocket Recv:" + msg.data);
-            //XXX: TODO What are you going to do here?            
+            debug(""); // empty this out
+            //XXX: TODO What are you going to do here?   
+            // console.log(msg.data);
+            let recievedMessage = JSON.parse(msg.data)
+            // console.log("recievedMessage");
+            // console.log(recievedMessage);
+            // updateEntity(recievedMessage["entity"], recievedMessage["data"]);
+            // world[recievedMessage.entity] = recievedMessage.data;
+            // console.log(recievedMessage.entity);
+            // console.log(recievedMessage.entity);
+            // drawNextFrame(recievedMessage.entity);
+            for (let name in recievedMessage ){
+                // updateEntity(entity, data[entity]);
+                // console.log(name);
+                // console.log(recievedMessage[name]);
+                world[name] = recievedMessage[name];
+                // drawFrame();
+                drawNextFrame();
+            }
         } catch (e) {
             alert("socket on message: " + e);
         }
@@ -271,6 +302,9 @@ function wsSetup() {
 wsSetup();
 
 
+function myFunction() {
+    console.log(world);
+}
 
 
 // 30 frames per second
@@ -278,5 +312,6 @@ setInterval( update, 1000/30.0);
 
 
     </script>
+    
 </body>
 </html>
